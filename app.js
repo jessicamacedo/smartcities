@@ -6,13 +6,39 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-/**
- * Swagger
- */
+
+/**** SWAGGER UI */
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
-app.use('/api-docs', swaggerUi.serve);
-app.get('/api-docs', swaggerUi.setup(swaggerDocument));
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "SMARTCITIES",
+      version: "1.0.0",
+      description: "SMARTCITIES API"
+    },
+    host: 'localhost:3000',
+    schemes: [
+      "https"
+    ],
+    consumes: ["application/json"],
+    produces: ["application/json"],
+    basePath: '/api/v1',
+    securityDefinitions: {
+      basicAuth: {
+        type: 'basic',
+        in: 'header',
+        name: 'basicAuth'
+      }
+    },
+  },
+  swagger: "2.0",
+  apis: ["./routes/*.js"]
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+/**** */
 
 
 app.use(express.json());
@@ -22,7 +48,7 @@ app.use('/', indexRouter);
 app.use('/api/v1/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 

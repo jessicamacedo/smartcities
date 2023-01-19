@@ -3,12 +3,151 @@ var router = express.Router();
 const { CreateUser, GetUserLogin } = require("../controllers/users");
 
 
-/* POST users sign up */
+
+/**
+ * @swagger
+ * /users/register:
+ *  post:
+ *    tags: ['Smartcities']
+ *    description: Register new user 
+ *    security:
+ *      - basicAuth: []
+ *    parameters:
+ *      - in: params
+ *        name: name
+ *        schema:
+ *          type: string
+ *        description: Full name of the user
+ *        example: John Doe
+ *        required: true
+ *      - in: params
+ *        name: email
+ *        schema:
+ *          type: string
+ *        description: Email for the user register
+ *        example: johndoe@test.com
+ *        required: true
+ *      - in: params
+ *        name: password
+ *        schema:
+ *          type: string
+ *        description: Password for the user register
+ *        example: 12345678
+ *        required: true
+ *      - in: params
+ *        name: address
+ *        schema:
+ *          type: string
+ *        description: Address of the user
+ *        example: St John street 123
+ *        required: true
+ *      - in: params
+ *        name: zipCode
+ *        schema:
+ *          type: string
+ *        description: Zip code for the user address
+ *        example: 4750-000
+ *        required: true
+ *      - in: params
+ *        name: userType
+ *        schema:
+ *          type: string
+ *          enum: [domestic, manager, admin]
+ *        description: Perfil of the user
+ *        example: domestic
+ *        required: true
+ *    responses:
+ *      '201':
+ *        description: User inserted with success
+ *        schema:
+ *          type: object
+ *          properties:
+ *            success:
+ *              type: string
+ *              example: Created user successfully!
+ *      '400':
+ *        description: Bad request trying to create new user
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: The user is already registered!
+ *      '500':
+ *        description: Error trying to create new user
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: Internal server error
+ * @description: Route to register users on database
+ */
 router.post('/register', async function (req, res) {
  await CreateUser(req, res);
 });
 
-/* GET users login */
+/**
+ * @swagger
+ * /users/login:
+ *  get:
+ *    tags: ['Smartcities']
+ *    description: Login user 
+ *    security:
+ *      - basicAuth: []
+ *    parameters:
+ *      - in: params
+ *        name: email
+ *        schema:
+ *          type: string
+ *        description: Email for the user register
+ *        example: johndoe@test.com
+ *        required: true
+ *      - in: params
+ *        name: password
+ *        schema:
+ *          type: string
+ *        description: Password for the user register
+ *        example: 12345678
+ *        required: true
+ *    responses:
+ *      '200':
+ *        description: User login with success
+ *        schema:
+ *          type: object
+ *          properties:
+ *            success:
+ *              type: object
+ *              properties:
+ *                token:
+ *                  type: string
+ *                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJeyJuYW1lIjoidXNlciA2IiwiZW1haWwiOiJ1c2VyNkBlbWFpbC5jb20iLCJhZGRyZXNzIjoiUnVhIGRlIGNpbWEiLCJ6aXBDb2RlIjoiNDc1MC0wMDAiLCJ1c2VyVHlwZSI6ImRvbWVzdGljIiwiaWF0IjoxNjc0MDgyNjc2LCJleHAiOjE2NzQxNjkwNzZ9.cwVm7cqJuN6Wm7TBczkLnFz0FpELi6qQX3i9byTqUN0
+ *      '403':
+ *        description: Login credencials not authorized
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: User not authorized!
+ *      '400':
+ *        description: Bad request trying to login
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: Password is required!
+ *      '500':
+ *        description: Error trying to login
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: Internal server error
+ * @description: Route to login users
+ */
 router.get('/login', async function (req, res) {
   await GetUserLogin(req, res);
 });
