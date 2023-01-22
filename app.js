@@ -3,9 +3,18 @@ var express = require('express');
 require('./database/db');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
 var app = express();
+const https = require('https');
 
+// PROTECT ALL ROUTES WITH API KEY
+app.use((req, res, next) => {
+  const apiKey = req.get('API-Key')
+  if (!apiKey || apiKey !== process.env.API_KEY) {
+    res.status(401).json({error: 'unauthorised'})
+  } else {
+    next()
+  }
+})
 
 /**** SWAGGER UI */
 const swaggerUi = require('swagger-ui-express');
@@ -52,7 +61,13 @@ app.use(function (req, res, next) {
   next(createError(404));
 });
 
-app.listen(process.env.port || 3500, () => {
+const options = {
+
+}
+
+//https.createServer(options, app).listen(process.env.port || 3500, () => {
+
+  app.listen(process.env.port || 3500, () => {
   console.log(`App listening on port ${process.env.port}`)
 })
 
