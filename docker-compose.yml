@@ -1,0 +1,10 @@
+version: "3"
+services:
+  smartcities:
+    image: smartcities
+    container_name: smartcities
+    restart: always
+    ports:
+      - 3000:3000
+
+      ## docker build -t smartcities .

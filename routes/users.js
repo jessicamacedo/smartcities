@@ -3,7 +3,6 @@ var router = express.Router();
 const { CreateUser, GetUserLogin } = require("../controllers/users");
 
 
-
 /**
  * @swagger
  * /users/register:
@@ -66,13 +65,21 @@ const { CreateUser, GetUserLogin } = require("../controllers/users");
  *              type: string
  *              example: Created user successfully!
  *      '400':
- *        description: Bad request trying to create new user
+ *        description: Bad request trying to create new user, input is invalid
  *        schema:
  *          type: object
  *          properties:
  *            error:
  *              type: string
- *              example: The user is already registered!
+ *              example: The field "email" is required.
+ *      '409':
+ *        description: Conflict trying to insert new user.
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: The user is already registered on the database!
  *      '500':
  *        description: Error trying to create new user
  *        schema:
