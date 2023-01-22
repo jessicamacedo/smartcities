@@ -36,7 +36,7 @@ CreateUser = async function (req, res) {
             }
         } else {
             //Send Bad Request with validation error message
-            res.status(400).send(ErrorResponse(validation.message));
+            res.status(400).send(ErrorResponse(inputValidation.message));
         }
 
     } catch (e) {
@@ -97,7 +97,7 @@ GetUserLogin = async function (req, res) {
             }
         } else {
             //If the input fields are invalid
-            res.status(400).send(ErrorResponse(validation.message));
+            res.status(400).send(ErrorResponse(inputValidation.message));
         }
     } catch (e) {
         console.error(e);

@@ -1,0 +1,110 @@
+{
+	"info": {
+		"_postman_id": "e090bc3d-32b3-4d49-acae-07f124cd705c",
+		"name": "SMART CITIES",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9444226"
+	},
+	"item": [
+		{
+			"name": "/api/v1/users",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "ZawlnxC0qT86JrBBxI9nlKfIzCqWwfKBEh0JXIH7hawJDEUlaycN4BlP8OQYJeYcgwtiOwGKihmCHeJ8Q8UAHo4Wiu0AELgSNy1zPXqkhQJW3orNSO0ejoyxsp9aege4",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "API-Key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"user 6\",\r\n    \"email\": \"user6@email.com\",\r\n    \"password\": \"12345678\",\r\n    \"address\": \"Rua de cima\",\r\n    \"zipCode\": \"4750-000\",\r\n    \"userType\": \"domestic\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"register"
+					],
+					"query": [
+						{
+							"key": "language",
+							"value": "es",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/users",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "ZawlnxC0qT86JrBBxI9nlKfIzCqWwfKBEh0JXIH7hawJDEUlaycN4BlP8OQYJeYcgwtiOwGKihmCHeJ8Q8UAHo4Wiu0AELgSNy1zPXqkhQJW3orNSO0ejoyxsp9aege4",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "API-Key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/users/login?email=user6@email.com&password=12345678",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "user6@email.com"
+						},
+						{
+							"key": "password",
+							"value": "12345678"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
