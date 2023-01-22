@@ -40,7 +40,7 @@ const UsersSchema = new Schema({
    /* devices: [ DevicesSchema]*/
 });
 
-//set hash password
+//set hash password with bcrypt
 UsersSchema.pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, 12);
   next();
