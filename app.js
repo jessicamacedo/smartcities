@@ -4,6 +4,7 @@ require('./database/db');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var app = express();
+var swagger = express();
 const https = require('https');
 
 // PROTECT ALL ROUTES WITH API KEY
@@ -46,7 +47,10 @@ const swaggerOptions = {
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+swagger.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+swagger.listen( process.env.swagger_port|| 3500, () => {
+  console.log(`Swagger listening on port ${ process.env.swagger_port|| 3500}`)
+})
 /**** */
 
 
