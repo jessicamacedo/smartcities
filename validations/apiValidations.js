@@ -20,6 +20,10 @@ async function JoiCreateUserValidation(params, body){
             .string()
             .required()
             .min(8),
+            passwordRepeated: Joi
+            .string()
+            .required()
+            .min(8),
             address: Joi
             .string()
             .required(),

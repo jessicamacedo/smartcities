@@ -21,23 +21,29 @@ CreateUser = async function (req, res) {
         let inputValidation = await JoiCreateUserValidation(req.query, req.body);
         // console.log(inputValidation)
 
-        if (inputValidation.isValid === true) {
-            // If input data is valid, creates new model UsersModel and inserts on database
-            const newUser = new UsersModel(req.body);
-            const addUser = await newUser.save(req.body);
-
-            if (addUser._id) {
-                //If the _id field was generated on the document it returns a success response with dynamic translation
-                res.status(201).send(SuccessResponse(GetLanguage(req.query.language).createdUser));
-            } else {
-                // console.error(error)
-                //Returns the database error saving user
-                res.status(500).send(ErrorResponse(error));
-            }
+        if (req.body.password !== req.body.passwordRepeated) {
+            res.status(400).send(ErrorResponse(GetLanguage(req.query.language).passwordsNotMatch));
         } else {
-            //Send Bad Request with validation error message
-            res.status(400).send(ErrorResponse(inputValidation.message));
+            if (inputValidation.isValid === true) {
+                // If input data is valid, creates new model UsersModel and inserts on database
+                const newUser = new UsersModel(req.body);
+                const addUser = await newUser.save(req.body);
+
+                if (addUser._id) {
+                    //If the _id field was generated on the document it returns a success response with dynamic translation
+                    res.status(201).send(SuccessResponse(GetLanguage(req.query.language).createdUser));
+                } else {
+                    // console.error(error)
+                    //Returns the database error saving user
+                    res.status(500).send(ErrorResponse(error));
+                }
+            } else {
+                //Send Bad Request with validation error message
+                res.status(400).send(ErrorResponse(inputValidation.message));
+            }
         }
+
+
 
     } catch (e) {
         // console.error(e);

@@ -34,6 +34,13 @@ const { CreateUser, GetUserLogin } = require("../controllers/users");
  *        example: 12345678
  *        required: true
  *      - in: params
+ *        name: password
+ *        schema:
+ *          type: string
+ *        description: Password repeated for the user register
+ *        example: 12345678
+ *        required: true
+ *      - in: params
  *        name: address
  *        schema:
  *          type: string
