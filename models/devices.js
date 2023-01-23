@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const DevicesSchema = new Schema({
-    description: {
+    deviceName: {
         type: String,
         required: true,
       },
@@ -14,18 +14,18 @@ const DevicesSchema = new Schema({
         required: true,
         enum: ["solarpanel", "carcharger", "energystore"],
       },
-    latitude: {
-        type: String,
-        required: false,
-      },
-    longitude: {
+    location: {
         type: String,
         required: true,
       },
-    user: {
+    userId: {
         type: String,
         required: true,
       },
+    email: {
+      type: String,
+      required: true,
+    },
     createdDate: { 
         type: Date,
         default: Date.now() 

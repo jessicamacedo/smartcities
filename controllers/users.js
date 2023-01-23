@@ -9,7 +9,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const JWTSECRET = process.env.JWTSECRET;
 const { GetLanguage } = require("../helpers/getLanguage")
-const { JoiCreateUserValidation, JoiGetUserLoginValidation } = require("../validations/apiValidations")
+const { JoiCreateUserValidation, JoiGetUserLoginValidation, JoiAssociateDeviceValidation } = require("../validations/apiValidations");
+const { DevicesModel } = require('../models/devices');
 
 
 /**
@@ -27,24 +28,21 @@ CreateUser = async function (req, res) {
             if (inputValidation.isValid === true) {
                 // If input data is valid, creates new model UsersModel and inserts on database
                 const newUser = new UsersModel(req.body);
-                const addUser = await newUser.save(req.body);
-
-                if (addUser._id) {
-                    //If the _id field was generated on the document it returns a success response with dynamic translation
+                await newUser.save(req.body)
+                .then(result => {
+                    console.log(result)
+                    //If the document is inserted it returns a success response with dynamic translation
                     res.status(201).send(SuccessResponse(GetLanguage(req.query.language).createdUser));
-                } else {
-                    // console.error(error)
+                })
+                .catch(err => {
                     //Returns the database error saving user
-                    res.status(500).send(ErrorResponse(error));
-                }
+                    res.status(500).send(ErrorResponse(err));
+                })
             } else {
                 //Send Bad Request with validation error message
                 res.status(400).send(ErrorResponse(inputValidation.message));
             }
         }
-
-
-
     } catch (e) {
         // console.error(e);
         if (e.code === 11000) {
@@ -85,6 +83,7 @@ GetUserLogin = async function (req, res) {
                 //If the credentials are valid, send the JWT token encrypted with the important information about the user
                 const token = jwt.sign(
                     {
+                        userId: user._id,
                         name: user.name,
                         email: user.email,
                         address: user.address,
@@ -110,7 +109,52 @@ GetUserLogin = async function (req, res) {
         res.status(500).send(ErrorResponse(e));
     }
 }
+
+
+/**
+ * Function to associate the user to a new device
+ */
+AssociateUserDevice = async function (req, res) {
+    try {
+        //Validate input parameters and body from api
+        let inputValidation = await JoiAssociateDeviceValidation(req.query, req.body);
+        console.log(inputValidation)
+
+        if (inputValidation.isValid === true) {
+            console.log(req.query)
+
+            // If input data is valid, find one document on database with the unique value "email"
+            const user = await UsersModel.findOne({ "email": req.body.email });
+            console.log('user: ' + user)
+            if(user._id){
+                //If user exists
+                req.body.userId = user._id;
+
+                const newUserDevice = new DevicesModel(req.body);
+                console.log("newUserDevice: " + JSON.stringify(newUserDevice));
+                await newUserDevice.save(req.body)
+                .then(result => {
+                    console.log(result)
+                    res.status(201).send(SuccessResponse(GetLanguage(req.query.language).createdDevice));
+                })
+                .catch(err => {
+                    res.status(500).send(ErrorResponse(err));
+                })
+            }
+        } else {
+            //If the input fields are invalid
+            res.status(400).send(ErrorResponse(inputValidation.message));
+        }
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(ErrorResponse(e));
+    }
+}
+
+
+
 module.exports = {
     CreateUser: CreateUser,
-    GetUserLogin: GetUserLogin
+    GetUserLogin: GetUserLogin,
+    AssociateUserDevice: AssociateUserDevice
 }

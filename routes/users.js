@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { CreateUser, GetUserLogin } = require("../controllers/users");
+const { CreateUser, GetUserLogin, AssociateUserDevice } = require("../controllers/users");
 
 
 /**
@@ -165,5 +165,74 @@ router.post('/register', async function (req, res) {
 router.get('/login', async function (req, res) {
   await GetUserLogin(req, res);
 });
+
+/**
+ * @swagger
+ * /users/devices:
+ *  post:
+ *    tags: ['Smartcities']
+ *    description: Register new device associated to a user 
+ *    security:
+ *      - basicAuth: []
+ *    parameters:
+ *      - in: params
+ *        name: email
+ *        schema:
+ *          type: string
+ *        description: Email for the user register
+ *        example: johndoe@test.com
+ *        required: true
+ *      - in: params
+ *        name: deviceName
+ *        schema:
+ *          type: string
+ *        description: Description of the device
+ *        example: Painel solar 1
+ *        required: true
+ *      - in: params
+ *        name: location
+ *        schema:
+ *          type: string
+ *        description: Description of the location of the device
+ *        example: garage
+ *        required: true
+ *      - in: params
+ *        name: type
+ *        schema:
+ *          type: string
+ *          enum: [solarpanel, car-charger]
+ *        description: Type of devices
+ *        example: solarpanel
+ *        required: true
+ *    responses:
+ *      '201':
+ *        description: Device inserted with success
+ *        schema:
+ *          type: object
+ *          properties:
+ *            success:
+ *              type: string
+ *              example: Created device successfully!
+ *      '400':
+ *        description: Bad request trying to create new user, input is invalid
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: The field "email" is required.
+ *      '500':
+ *        description: Error trying to create device
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: Internal server error
+ * @description: Route to register users on database
+ */
+router.post('/devices', async function (req, res) {
+  await AssociateUserDevice(req, res);
+ });
 
 module.exports = router;

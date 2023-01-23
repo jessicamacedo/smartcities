@@ -73,7 +73,45 @@ async function JoiGetUserLoginValidation(params){
         };
     }
 }
+
+async function JoiAssociateDeviceValidation(params, body){
+    try{
+        var validationParams = Joi.object({
+            language: Joi
+            .string()
+            .valid('pt','en')
+        })
+        await validationParams.validateAsync(params);
+        var validationBody = Joi.object({
+            email: Joi
+            .string()
+            .required()
+            .email(),
+            deviceName: Joi
+            .string()
+            .required(),
+            location: Joi
+            .string()
+            .required(),
+            type: Joi
+            .string()
+            .valid("solarpanel", "carcharger", "energystore")
+            .required()
+        })
+        await validationBody.validateAsync(body);
+        return {
+            isValid: true
+        };
+    }catch(e){
+        console.log()
+        return {
+            isValid: false,
+            message: e
+        };
+    }
+}
 module.exports = {
      JoiCreateUserValidation: JoiCreateUserValidation,
-     JoiGetUserLoginValidation: JoiGetUserLoginValidation
+     JoiGetUserLoginValidation: JoiGetUserLoginValidation,
+     JoiAssociateDeviceValidation: JoiAssociateDeviceValidation
 }
