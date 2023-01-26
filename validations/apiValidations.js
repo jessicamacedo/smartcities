@@ -90,12 +90,51 @@ async function JoiAssociateDeviceValidation(params, body){
             deviceName: Joi
             .string()
             .required(),
+            deviceId: Joi
+            .string()
+            .required(),
             location: Joi
             .string()
             .required(),
             type: Joi
             .string()
-            .valid("solarpanel", "carcharger", "energystore")
+            .valid("solarpanel")
+            .required()
+        })
+        await validationBody.validateAsync(body);
+        return {
+            isValid: true
+        };
+    }catch(e){
+        console.log()
+        return {
+            isValid: false,
+            message: e
+        };
+    }
+}
+
+async function JoiAssociateReadingDeviceValidation(params, body){
+    try{
+        var validationParams = Joi.object({
+            language: Joi
+            .string()
+            .valid('pt','en')
+        })
+        await validationParams.validateAsync(params);
+        var validationBody = Joi.object({
+            deviceId: Joi
+            .string()
+            .required(),
+            type: Joi
+            .string()
+            .required()
+            .valid("solarpanel"),
+            consumption: Joi
+            .string()
+            .required(),
+            production: Joi
+            .string()
             .required()
         })
         await validationBody.validateAsync(body);
@@ -113,5 +152,6 @@ async function JoiAssociateDeviceValidation(params, body){
 module.exports = {
      JoiCreateUserValidation: JoiCreateUserValidation,
      JoiGetUserLoginValidation: JoiGetUserLoginValidation,
-     JoiAssociateDeviceValidation: JoiAssociateDeviceValidation
+     JoiAssociateDeviceValidation: JoiAssociateDeviceValidation,
+     JoiAssociateReadingDeviceValidation: JoiAssociateReadingDeviceValidation
 }

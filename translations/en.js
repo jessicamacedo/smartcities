@@ -4,4 +4,5 @@ module.exports = {
     "createdUser": "Created user successfully!",
     "passwordsNotMatch": "Passwords does not match!",
     "createdDevice": "Device created successfully!",
+    "createdReading": "Reading created successfully!",
 }

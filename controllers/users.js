@@ -55,7 +55,6 @@ CreateUser = async function (req, res) {
 }
 
 
-
 /**
  * Function to validate the credentials of the user and return the JWT token for login
  */
@@ -123,6 +122,8 @@ AssociateUserDevice = async function (req, res) {
         if (inputValidation.isValid === true) {
             console.log(req.query)
 
+            //TODO JWT
+            
             // If input data is valid, find one document on database with the unique value "email"
             const user = await UsersModel.findOne({ "email": req.body.email });
             console.log('user: ' + user)
@@ -150,8 +151,6 @@ AssociateUserDevice = async function (req, res) {
         res.status(500).send(ErrorResponse(e));
     }
 }
-
-
 
 module.exports = {
     CreateUser: CreateUser,
