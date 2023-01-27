@@ -15,16 +15,16 @@ const ReadingsSchema = new Schema({
         enum: ["solarpanel", "energystore"],
       },
     consumption: {
-        type: String,
+        type: Number,
         required: true,
       },
     production: {
-        type: String,
+        type: Number,
         required: true,
       },
     createdDate: { 
         type: Date,
-        default: Date.now() 
+        required: true
     }
 });
 

@@ -5,7 +5,7 @@
 
 var { ErrorResponse, SuccessResponse } = require('./response');
 const { GetLanguage } = require("../helpers/getLanguage")
-const { JoiAssociateReadingDeviceValidation } = require("../validations/apiValidations");
+const { JoiAssociateReadingDeviceValidation, JoiAssociateGetReadingsDeviceValidation } = require("../validations/apiValidations");
 const { ReadingsModel } = require("../models/readings");
 
 
@@ -19,7 +19,7 @@ CreateReadingDevice = async function (req, res) {
         console.log(inputValidation)
 
         if (inputValidation.isValid === true) {
-
+            req.body.createdDate = new Date();
             console.log(req.body)
             const newReading = new ReadingsModel(req.body);
             await newReading.save(req.body)
@@ -42,8 +42,33 @@ CreateReadingDevice = async function (req, res) {
     }
 }
 
+/**
+ * Function to get the readings of a device
+ */
+GetReadingsDevice = async function (req, res) {
+    try {
+        //Validate input parameters and body from api
+        let inputValidation = await JoiAssociateGetReadingsDeviceValidation(req.query);
+        console.log(inputValidation)
 
+        if (inputValidation.isValid === true) {
+
+            console.log(req.body)
+            const readings = await ReadingsModel.find({ "deviceId": req.query.deviceId });
+            console.log(readings)
+            res.status(200).send(readings)
+
+        } else {
+            //If the input fields are invalid
+            res.status(400).send(ErrorResponse(inputValidation.message));
+        }
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(ErrorResponse(e));
+    }
+}
 
 module.exports = {
-    CreateReadingDevice: CreateReadingDevice
+    CreateReadingDevice: CreateReadingDevice,
+    GetReadingsDevice: GetReadingsDevice
 }

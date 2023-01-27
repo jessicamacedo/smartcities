@@ -131,10 +131,10 @@ async function JoiAssociateReadingDeviceValidation(params, body){
             .required()
             .valid("solarpanel"),
             consumption: Joi
-            .string()
+            .number()
             .required(),
             production: Joi
-            .string()
+            .number()
             .required()
         })
         await validationBody.validateAsync(body);
@@ -149,9 +149,36 @@ async function JoiAssociateReadingDeviceValidation(params, body){
         };
     }
 }
+
+async function JoiAssociateGetReadingsDeviceValidation(params){
+    try{
+        var validationParams = Joi.object({
+            language: Joi
+            .string()
+            .valid('pt','en'),
+            deviceId: Joi
+            .string()
+            .required(),
+        })
+        await validationParams.validateAsync(params);
+
+        return {
+            isValid: true
+        };
+    }catch(e){
+        console.log()
+        return {
+            isValid: false,
+            message: e
+        };
+    }
+}
+
+
 module.exports = {
      JoiCreateUserValidation: JoiCreateUserValidation,
      JoiGetUserLoginValidation: JoiGetUserLoginValidation,
      JoiAssociateDeviceValidation: JoiAssociateDeviceValidation,
-     JoiAssociateReadingDeviceValidation: JoiAssociateReadingDeviceValidation
+     JoiAssociateReadingDeviceValidation: JoiAssociateReadingDeviceValidation,
+     JoiAssociateGetReadingsDeviceValidation: JoiAssociateGetReadingsDeviceValidation
 }
