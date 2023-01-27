@@ -1,0 +1,373 @@
+[
+    {
+        "id": "111931e2f700c2db",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "217cb930779ece8d",
+        "type": "mqtt in",
+        "z": "111931e2f700c2db",
+        "name": "subscribe",
+        "topic": "topic/panel",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "bfa3ce0ed90cc386",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 80,
+        "wires": [
+            [
+                "a1dc7a86d494fc27"
+            ]
+        ]
+    },
+    {
+        "id": "cef6daf921b43881",
+        "type": "debug",
+        "z": "111931e2f700c2db",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "276c7dd785d6881d",
+        "type": "inject",
+        "z": "111931e2f700c2db",
+        "name": "Panel solar data",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"deviceId\":\"00-B0-D0-63-C2-26\",\"type\":\"solarpanel\",\"consumption\":\"250\",\"production\":\"100\"}",
+        "payloadType": "json",
+        "x": 220,
+        "y": 400,
+        "wires": [
+            [
+                "942d7bef663aa775"
+            ]
+        ]
+    },
+    {
+        "id": "de6b2eb0d8881155",
+        "type": "mqtt out",
+        "z": "111931e2f700c2db",
+        "name": "publish",
+        "topic": "topic/panel",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "bfa3ce0ed90cc386",
+        "x": 660,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "a1dc7a86d494fc27",
+        "type": "http request",
+        "z": "111931e2f700c2db",
+        "name": "POST /devices/readings",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:3200/api/v1/devices/readings",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 410,
+        "y": 60,
+        "wires": [
+            [
+                "cef6daf921b43881"
+            ]
+        ]
+    },
+    {
+        "id": "a2f44d2fb3e84993",
+        "type": "ui_chart",
+        "z": "111931e2f700c2db",
+        "name": "Line Chart",
+        "group": "de7dfee7ed0c1ebe",
+        "order": 2,
+        "width": "6",
+        "height": "5",
+        "label": "Device: {{msg.deviceId}}",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 830,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2cab46e9f0759a7d",
+        "type": "function",
+        "z": "111931e2f700c2db",
+        "name": "create chart object",
+        "func": "\nvar data = [];\nvar time = [];\nvar consumption = [];\nvar production = [];\n\n\nmsg.payload.forEach(function(element) {\n    consumption.push(element.consumption);\n    production.push(element.production);\n    time.push([new Date(element.createdDate).toLocaleTimeString()])\n\n});\ndata.push(consumption, production)\n\nmsg.payload = [{\n    \"series\": [\"consumption\", \"production\"],\n    \"data\": data, //[[2, 21, 55], [32, 55, 66]],\n    \"labels\": time //[[\"01:29:52\"], [\"01:29:5\"]]\n}];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 200,
+        "wires": [
+            [
+                "a2f44d2fb3e84993",
+                "8572abe1e59afc1b"
+            ]
+        ]
+    },
+    {
+        "id": "290a456de42f338f",
+        "type": "http request",
+        "z": "111931e2f700c2db",
+        "name": "GET /devices/readings",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "query",
+        "url": "http://localhost:3200/api/v1/devices/readings?deviceId=00-B0-D0-63-C2-26",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "deviceId",
+                "valueType": "other",
+                "valueValue": "msg.deviceId"
+            }
+        ],
+        "x": 400,
+        "y": 240,
+        "wires": [
+            [
+                "2cab46e9f0759a7d",
+                "f4e7c1f77ed08d8d"
+            ]
+        ]
+    },
+    {
+        "id": "f4e7c1f77ed08d8d",
+        "type": "debug",
+        "z": "111931e2f700c2db",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "8572abe1e59afc1b",
+        "type": "debug",
+        "z": "111931e2f700c2db",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "76f7e0bea5816951",
+        "type": "inject",
+        "z": "111931e2f700c2db",
+        "name": "DeviceId",
+        "props": [
+            {
+                "p": "deviceId",
+                "v": "00-B0-D0-63-C2-26",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "4",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 220,
+        "wires": [
+            [
+                "290a456de42f338f"
+            ]
+        ]
+    },
+    {
+        "id": "942d7bef663aa775",
+        "type": "function",
+        "z": "111931e2f700c2db",
+        "name": "Set random values",
+        "func": "msg.payload = {\n\n    deviceId: \"00-B0-D0-63-C2-26\",\n    type: \"solarpanel\",\n    consumption: Math.round(Math.random() * 100),\n    production: Math.round(Math.random() * 100)\n\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 380,
+        "wires": [
+            [
+                "de6b2eb0d8881155"
+            ]
+        ]
+    },
+    {
+        "id": "a35f7036d474e4a0",
+        "type": "comment",
+        "z": "111931e2f700c2db",
+        "name": "Panel solar simulator",
+        "info": "",
+        "x": 220,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "b360df2c888e4c7e",
+        "type": "comment",
+        "z": "111931e2f700c2db",
+        "name": "Save panel consumptions on database",
+        "info": "",
+        "x": 270,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "fc92fdb55e64ae62",
+        "type": "comment",
+        "z": "111931e2f700c2db",
+        "name": "Get readings from database and populate dashboard",
+        "info": "",
+        "x": 310,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "bfa3ce0ed90cc386",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "de7dfee7ed0c1ebe",
+        "type": "ui_group",
+        "name": "Consumptions",
+        "tab": "9085922f8b421dae",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9085922f8b421dae",
+        "type": "ui_tab",
+        "name": "Smartcity",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
