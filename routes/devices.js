@@ -6,103 +6,119 @@ const { CreateReadingDevice, GetReadingsDevice } = require("../controllers/readi
 
 /**
  * @swagger
- * /users/register:
+ * /devices/readings:
  *  post:
- *    tags: ['Smartcities']
- *    description: Register new user 
+ *    tags: ['Devices']
+ *    description: Register new reading from device 
  *    security:
  *      - basicAuth: []
  *    parameters:
  *      - in: params
- *        name: name
+ *        name: deviceId
  *        schema:
  *          type: string
- *        description: Full name of the user
- *        example: John Doe
+ *        description: Mac address of the device
+ *        example: 12-32-TG-43-12-YH
  *        required: true
  *      - in: params
- *        name: email
+ *        name: type
  *        schema:
  *          type: string
- *        description: Email for the user register
- *        example: johndoe@test.com
+ *        description: Type of the device
+ *        example: solarpanel
  *        required: true
  *      - in: params
- *        name: password
+ *        name: consumption
  *        schema:
- *          type: string
- *        description: Password for the user register
- *        example: 12345678
+ *          type: number
+ *        description: Consumption of the device on a certain timestamp
+ *        example: 120
  *        required: true
  *      - in: params
- *        name: password
+ *        name: production
  *        schema:
- *          type: string
- *        description: Password repeated for the user register
- *        example: 12345678
- *        required: true
- *      - in: params
- *        name: address
- *        schema:
- *          type: string
- *        description: Address of the user
- *        example: St John street 123
- *        required: true
- *      - in: params
- *        name: zipCode
- *        schema:
- *          type: string
- *        description: Zip code for the user address
- *        example: 4750-000
- *        required: true
- *      - in: params
- *        name: userType
- *        schema:
- *          type: string
- *          enum: [domestic, manager, admin]
- *        description: Perfil of the user
- *        example: domestic
+ *          type: number
+ *        description: Production of the device on a certain timestamp
+ *        example: 12
  *        required: true
  *    responses:
  *      '201':
- *        description: User inserted with success
+ *        description: Reading inserted with success
  *        schema:
  *          type: object
  *          properties:
  *            success:
  *              type: string
- *              example: Created user successfully!
+ *              example: Reading created successfully!
  *      '400':
- *        description: Bad request trying to create new user, input is invalid
+ *        description: Bad request trying to insert reading, input is invalid
  *        schema:
  *          type: object
  *          properties:
  *            error:
  *              type: string
- *              example: The field "email" is required.
- *      '409':
- *        description: Conflict trying to insert new user.
- *        schema:
- *          type: object
- *          properties:
- *            error:
- *              type: string
- *              example: The user is already registered on the database!
+ *              example: The field "consumption" is required.
  *      '500':
- *        description: Error trying to create new user
+ *        description: Error trying to create new reading
  *        schema:
  *          type: object
  *          properties:
  *            error:
  *              type: string
  *              example: Internal server error
- * @description: Route to register users on database
+ * @description: Route to register readings on database
  */
 router.post('/readings', async function (req, res) {
  await CreateReadingDevice(req, res);
 });
 
 
+/**
+ * @swagger
+ * /devices/readings:
+ *  get:
+ *    tags: ['Devices']
+ *    description: Get all readings from device 
+ *    security:
+ *      - basicAuth: []
+ *    parameters:
+ *      - in: params
+ *        name: deviceId
+ *        schema:
+ *          type: string
+ *        description: Mac address of the device
+ *        example: 12-32-TG-43-12-YH
+ *        required: true
+ *    responses:
+ *      '200':
+ *        description: Readings of the device
+ *        schema:
+ *          type: array
+ *          properties:
+ *              type: object
+ *              properties:
+ *                  _id:
+ *                  type: string
+ *                  example: 63d32910784dfdb81ac991a1
+ * 
+ *      '400':
+ *        description: Bad request trying to get readings, input is invalid
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: The field "consumption" is required.
+ *      '500':
+ *        description: Error trying to get readings
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: string
+ *              example: Internal server error
+ * @description: Route to register readings on database
+ */
 router.get('/readings', async function (req, res) {
   await GetReadingsDevice(req, res);
  });

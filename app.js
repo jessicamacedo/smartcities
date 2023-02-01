@@ -30,19 +30,9 @@ const swaggerOptions = {
       description: "SMARTCITIES API"
     },
     host: 'localhost:3000',
-    schemes: [
-      "https"
-    ],
     consumes: ["application/json"],
     produces: ["application/json"],
     basePath: '/api/v1',
-    securityDefinitions: {
-      basicAuth: {
-        type: 'basic',
-        in: 'header',
-        name: 'basicAuth'
-      }
-    },
   },
   swagger: "2.0",
   apis: ["./routes/*.js"]

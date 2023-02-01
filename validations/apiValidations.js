@@ -11,6 +11,7 @@ async function JoiCreateUserValidation(params, body){
         var validationBody = Joi.object({
             name: Joi
             .string()
+            .regex(/^[a-zA-Z0-9 ]*$/)
             .required(),
             email: Joi
             .string()
@@ -58,7 +59,7 @@ async function JoiGetUserLoginValidation(params){
             .email(),
             password: Joi
             .string()
-            .required()
+            .required() 
             .min(8)
         })
         await validation.validateAsync(params);
@@ -119,12 +120,14 @@ async function JoiAssociateReadingDeviceValidation(params, body){
         var validationParams = Joi.object({
             language: Joi
             .string()
+            .regex(/^[a-zA-Z0-9]*$/) //usado para prevenir NOSQL injection in mongo
             .valid('pt','en')
         })
         await validationParams.validateAsync(params);
         var validationBody = Joi.object({
             deviceId: Joi
             .string()
+            .regex(/^[a-zA-Z0-9-]*$/) //usado para prevenir NOSQL injection in mongo
             .required(),
             type: Joi
             .string()
@@ -155,9 +158,11 @@ async function JoiAssociateGetReadingsDeviceValidation(params){
         var validationParams = Joi.object({
             language: Joi
             .string()
+            .regex(/^[a-zA-Z0-9]*$/) //usado para prevenir NOSQL injection in mongo
             .valid('pt','en'),
             deviceId: Joi
             .string()
+            .regex(/^[a-zA-Z0-9-]*$/) //usado para prevenir NOSQL injection in mongo ex: consumption: { $gte: 10 }
             .required(),
         })
         await validationParams.validateAsync(params);

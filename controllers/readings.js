@@ -53,8 +53,9 @@ GetReadingsDevice = async function (req, res) {
 
         if (inputValidation.isValid === true) {
 
-            console.log(req.body)
-            const readings = await ReadingsModel.find({ "deviceId": req.query.deviceId });
+            console.log(req.query)
+            console.log({ "deviceId": req.query.deviceId })
+            const readings = await ReadingsModel.find({ "deviceId": req.query.deviceId }).sort({createdDate: -1});
             console.log(readings)
             res.status(200).send(readings)
 

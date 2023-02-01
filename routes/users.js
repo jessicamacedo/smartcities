@@ -7,7 +7,7 @@ const { CreateUser, GetUserLogin, AssociateUserDevice } = require("../controller
  * @swagger
  * /users/register:
  *  post:
- *    tags: ['Smartcities']
+ *    tags: ['Users']
  *    description: Register new user 
  *    security:
  *      - basicAuth: []
@@ -105,7 +105,7 @@ router.post('/register', async function (req, res) {
  * @swagger
  * /users/login:
  *  get:
- *    tags: ['Smartcities']
+ *    tags: ['Users']
  *    description: Login user 
  *    security:
  *      - basicAuth: []
@@ -170,7 +170,7 @@ router.get('/login', async function (req, res) {
  * @swagger
  * /users/devices:
  *  post:
- *    tags: ['Smartcities']
+ *    tags: ['Users']
  *    description: Register new device associated to a user 
  *    security:
  *      - basicAuth: []
