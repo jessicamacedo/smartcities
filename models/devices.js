@@ -12,7 +12,7 @@ const DevicesSchema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: ["solarpanel"],
+    enum: ["solarpanel", "windpower", "hydropower", "energystorage"],
   },
   location: {
     type: String,

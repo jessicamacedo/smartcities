@@ -2,7 +2,9 @@ var express = require('express');
 var router = express.Router();
 const { CreateReadingDevice, GetReadingsDevice } = require("../controllers/readings");
 
-
+/**
+ * APIs called on the Node-RED project
+ */
 
 /**
  * @swagger

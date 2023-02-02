@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "/api/v1/users",
+			"name": "/api/v1/users/register",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -28,7 +28,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"user 6\",\r\n    \"email\": \"user6@email.com\",\r\n    \"password\": \"12345678\",\r\n    \"passwordRepeated\": \"12345678\",\r\n    \"address\": \"Rua de cima\",\r\n    \"zipCode\": \"4750-000\",\r\n    \"userType\": \"domestic\"\r\n}",
+					"raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"johndoe@email.com\",\r\n    \"password\": \"12345678\",\r\n    \"passwordRepeated\": \"12345678\",\r\n    \"address\": \"Rua de cima\",\r\n    \"zipCode\": \"4750-000\",\r\n    \"userType\": \"domestic\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -36,8 +36,8 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/v1/users/register",
-					"protocol": "http",
+					"raw": "https://localhost:3000/api/v1/users/register",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
@@ -60,7 +60,7 @@
 			"response": []
 		},
 		{
-			"name": "/api/v1/users",
+			"name": "/api/v1/users/login",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -80,8 +80,8 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/v1/users/login?email=user6@email.com&password=12345678",
-					"protocol": "http",
+					"raw": "https://localhost:3000/api/v1/users/login?email=johndoe@email.com&password=12345678",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
@@ -95,7 +95,7 @@
 					"query": [
 						{
 							"key": "email",
-							"value": "user6@email.com"
+							"value": "johndoe@email.com"
 						},
 						{
 							"key": "password",
@@ -125,10 +125,16 @@
 					]
 				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "tokenJWT",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RhMzI1MjRlOTQxMmRkOGEyZGMwYjgiLCJuYW1lIjoidXNlciA2IiwiZW1haWwiOiJ1c2VyNjY2QGVtYWlsLmNvbSIsImFkZHJlc3MiOiJSdWEgZGUgY2ltYSIsInppcENvZGUiOiI0NzUwLTAwMCIsInVzZXJUeXBlIjoiZG9tZXN0aWMiLCJpYXQiOjE2NzUyNDQxMzAsImV4cCI6MTY3NTMzMDUzMH0.rcBzGiB8zL0tHYes5-Z1cFzpxAiY_luWEvJatXJJupE",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"user6@email.com\",\r\n    \"deviceName\": \"painel solar 1\",\r\n    \"location\": \"garage\",\r\n    \"type\": \"solarpanel\",\r\n    \"deviceId\": \"00-B0-D0-63-C2-26\"\r\n}",
+					"raw": "{\r\n    \"deviceName\": \"painel solar 1\",\r\n    \"location\": \"garage\",\r\n    \"type\": \"solarpanel\",\r\n    \"deviceId\": \"00-B0-D0-63-C2-26\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -136,8 +142,8 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/v1/users/devices",
-					"protocol": "http",
+					"raw": "https://localhost:3000/api/v1/users/devices",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
@@ -169,7 +175,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"deviceId\": \"00-B0-D0-63-C2-26\",\r\n    \"type\": \"solarpanel\",\r\n    \"consumption\": 250,\r\n    \"production\": 100\r\n}",
+					"raw": "{\r\n    \"deviceId\": \"00-B0-D0-63-C2-26\",\r\n    \"type\": \"solarpanel\",\r\n    \"consumption\": 0.2,\r\n    \"production\": 1.5\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

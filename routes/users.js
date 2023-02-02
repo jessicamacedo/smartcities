@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 const { CreateUser, GetUserLogin, AssociateUserDevice } = require("../controllers/users");
 
+/**
+ * APIs called on the mobile application
+ */
 
 /**
  * @swagger

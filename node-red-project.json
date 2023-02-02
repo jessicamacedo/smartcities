@@ -41,7 +41,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 620,
+        "x": 640,
         "y": 80,
         "wires": []
     },
@@ -59,14 +59,14 @@
                 "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "1800",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{\"deviceId\":\"00-B0-D0-63-C2-26\",\"type\":\"solarpanel\",\"consumption\":\"250\",\"production\":\"100\"}",
-        "payloadType": "json",
-        "x": 220,
+        "payload": "",
+        "payloadType": "str",
+        "x": 230,
         "y": 400,
         "wires": [
             [
@@ -88,7 +88,7 @@
         "correl": "",
         "expiry": "",
         "broker": "bfa3ce0ed90cc386",
-        "x": 660,
+        "x": 680,
         "y": 400,
         "wires": []
     },
@@ -165,7 +165,7 @@
         "type": "function",
         "z": "111931e2f700c2db",
         "name": "create chart object",
-        "func": "\nvar data = [];\nvar time = [];\nvar consumption = [];\nvar production = [];\n\n\nmsg.payload.forEach(function(element) {\n    consumption.push(element.consumption);\n    production.push(element.production);\n    time.push([new Date(element.createdDate).toLocaleTimeString()])\n\n});\ndata.push(consumption, production)\n\nmsg.payload = [{\n    \"series\": [\"consumption\", \"production\"],\n    \"data\": data, //[[2, 21, 55], [32, 55, 66]],\n    \"labels\": time //[[\"01:29:52\"], [\"01:29:5\"]]\n}];\n\nreturn msg;",
+        "func": "var data = [];\nvar time = [];\nvar consumption = [];\nvar production = [];\n\nmsg.payload.forEach(function(element) {\n    consumption.push(element.consumption);\n    production.push(element.production);\n    time.push([new Date(element.createdDate).toLocaleTimeString()])\n\n});\ndata.push(consumption, production)\n\nmsg.payload = [{\n    \"series\": [\"consumption\", \"production\"],\n    \"data\": data, //[[2, 21, 55], [32, 55, 66]],\n    \"labels\": time //[[\"01:29:52\"], [\"01:29:5\"]]\n}];\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -261,7 +261,7 @@
                 "vt": "str"
             }
         ],
-        "repeat": "4",
+        "repeat": "5",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
@@ -279,13 +279,13 @@
         "type": "function",
         "z": "111931e2f700c2db",
         "name": "Set random values",
-        "func": "msg.payload = {\n\n    deviceId: \"00-B0-D0-63-C2-26\",\n    type: \"solarpanel\",\n    consumption: Math.round(Math.random() * 100),\n    production: Math.round(Math.random() * 100)\n\n}\nreturn msg;",
+        "func": "msg.payload = {\n\n    deviceId: \"00-B0-D0-63-C2-26\",\n    type: \"solarpanel\",\n    consumption: (Math.random() * 5.5).toFixed(2),\n    production: (Math.random() * 5.5).toFixed(2)\n\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 450,
+        "x": 470,
         "y": 380,
         "wires": [
             [

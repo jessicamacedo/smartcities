@@ -3,7 +3,7 @@
  *  Last modified 21/01/2023
  */
 
-var { ErrorResponse, SuccessResponse } = require('../controllers/response');
+var { ErrorResponse, SuccessResponse } = require('../helpers/response');
 const { UsersModel } = require("../models/users");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
@@ -20,6 +20,7 @@ CreateUser = async function (req, res) {
     try {
         //Validate input parameters and body from api
         let inputValidation = await JoiCreateUserValidation(req.query, req.body);
+        
         // console.log(inputValidation)
 
         if (req.body.password !== req.body.passwordRepeated) {
@@ -35,8 +36,15 @@ CreateUser = async function (req, res) {
                     res.status(201).send(SuccessResponse(GetLanguage(req.query.language).createdUser));
                 })
                 .catch(err => {
+                    console.error(err.code)
+                    if(err.code === 11000){
+                        // Returns status code 409 (conflict) and message user already exists
+                        res.status(409).send(ErrorResponse(GetLanguage(req.query.language).duplicatedUser));
+                    }else{
+
                     //Returns the database error saving user
                     res.status(500).send(ErrorResponse(err));
+                    }
                 })
             } else {
                 //Send Bad Request with validation error message
@@ -44,13 +52,7 @@ CreateUser = async function (req, res) {
             }
         }
     } catch (e) {
-        // console.error(e);
-        if (e.code === 11000) {
-            // Returns status code 409 (conflict) and message user already exists
-            res.status(409).send(ErrorResponse(GetLanguage(req.query.language).duplicatedUser));
-        } else {
-            res.status(500).send(ErrorResponse(e));
-        }
+        res.status(500).send(ErrorResponse(e));
     }
 }
 
@@ -115,25 +117,29 @@ GetUserLogin = async function (req, res) {
  */
 AssociateUserDevice = async function (req, res) {
     try {
+        
         //Validate input parameters and body from api
         let inputValidation = await JoiAssociateDeviceValidation(req.query, req.body);
-        console.log(inputValidation)
 
-        if (inputValidation.isValid === true) {
-            console.log(req.query)
+        //validate token for authentication 
+        const token = req.headers.tokenjwt;
+        
+        const authenticated = jwt.verify(token, JWTSECRET)
+        console.log('authenticated ' + JSON.stringify(authenticated))
 
-            //TODO JWT
+        if (inputValidation.isValid === true && authenticated.userId) {
             
-            // If input data is valid, find one document on database with the unique value "email"
-            const user = await UsersModel.findOne({ "email": req.body.email });
-            console.log('user: ' + user)
-            if(user._id){
-                //If user exists
-                req.body.userId = user._id;
-
-                const newUserDevice = new DevicesModel(req.body);
+                const device = {
+                    userId: authenticated.userId,
+                    email: authenticated.email,
+                    deviceName: req.body.deviceName,
+                    location: req.body.location,
+                    type: req.body.type,
+                    deviceId: req.body.deviceId
+                }
+                const newUserDevice = new DevicesModel(device);
                 console.log("newUserDevice: " + JSON.stringify(newUserDevice));
-                await newUserDevice.save(req.body)
+                await newUserDevice.save(device)
                 .then(result => {
                     console.log(result)
                     res.status(201).send(SuccessResponse(GetLanguage(req.query.language).createdDevice));
@@ -141,7 +147,7 @@ AssociateUserDevice = async function (req, res) {
                 .catch(err => {
                     res.status(500).send(ErrorResponse(err));
                 })
-            }
+            
         } else {
             //If the input fields are invalid
             res.status(400).send(ErrorResponse(inputValidation.message));

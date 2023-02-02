@@ -12,7 +12,7 @@ const ReadingsSchema = new Schema({
     type: {
         type: String,
         required: true,
-        enum: ["solarpanel", "energystore"],
+        enum: ["solarpanel", "windpower", "hydropower", "energystorage"],
       },
     consumption: {
         type: Number,
@@ -22,6 +22,14 @@ const ReadingsSchema = new Schema({
         type: Number,
         required: true,
       },
+    userId: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
     createdDate: { 
         type: Date,
         required: true

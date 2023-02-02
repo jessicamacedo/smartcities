@@ -84,10 +84,6 @@ async function JoiAssociateDeviceValidation(params, body){
         })
         await validationParams.validateAsync(params);
         var validationBody = Joi.object({
-            email: Joi
-            .string()
-            .required()
-            .email(),
             deviceName: Joi
             .string()
             .required(),
@@ -99,7 +95,7 @@ async function JoiAssociateDeviceValidation(params, body){
             .required(),
             type: Joi
             .string()
-            .valid("solarpanel")
+            .valid("solarpanel", "windpower", "hydropower", "energystorage")
             .required()
         })
         await validationBody.validateAsync(body);
@@ -115,24 +111,24 @@ async function JoiAssociateDeviceValidation(params, body){
     }
 }
 
-async function JoiAssociateReadingDeviceValidation(params, body){
+async function JoiCreateReadingDeviceValidation(params, body){
     try{
         var validationParams = Joi.object({
             language: Joi
             .string()
-            .regex(/^[a-zA-Z0-9]*$/) //usado para prevenir NOSQL injection in mongo
+            .regex(/^[a-zA-Z0-9]*$/)
             .valid('pt','en')
         })
         await validationParams.validateAsync(params);
         var validationBody = Joi.object({
             deviceId: Joi
             .string()
-            .regex(/^[a-zA-Z0-9-]*$/) //usado para prevenir NOSQL injection in mongo
+            .regex(/^[a-zA-Z0-9-]*$/)
             .required(),
             type: Joi
             .string()
             .required()
-            .valid("solarpanel"),
+            .valid("solarpanel", "windpower", "hydropower", "energystorage"),
             consumption: Joi
             .number()
             .required(),
@@ -158,7 +154,6 @@ async function JoiAssociateGetReadingsDeviceValidation(params){
         var validationParams = Joi.object({
             language: Joi
             .string()
-            .regex(/^[a-zA-Z0-9]*$/) //usado para prevenir NOSQL injection in mongo
             .valid('pt','en'),
             deviceId: Joi
             .string()
@@ -184,6 +179,6 @@ module.exports = {
      JoiCreateUserValidation: JoiCreateUserValidation,
      JoiGetUserLoginValidation: JoiGetUserLoginValidation,
      JoiAssociateDeviceValidation: JoiAssociateDeviceValidation,
-     JoiAssociateReadingDeviceValidation: JoiAssociateReadingDeviceValidation,
+     JoiCreateReadingDeviceValidation: JoiCreateReadingDeviceValidation,
      JoiAssociateGetReadingsDeviceValidation: JoiAssociateGetReadingsDeviceValidation
 }
