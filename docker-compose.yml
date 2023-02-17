@@ -8,6 +8,5 @@ services:
       - 3000:3000
       - 3500:3500
       - 3200:3200
-      - 27017:27017
 
       ## docker build -t smartcities .
